@@ -1,25 +1,25 @@
 <?xml version="1.0" encoding="utf-8"?>
-<component size="720,1280">
+<component size="1280,720">
   <displayList>
-    <image id="n0_ngfr" name="bg" src="b50kq" fileName="img/img3.png" xy="0,0" size="720,1280">
+    <image id="n0_ngfr" name="bg" src="b50kq" fileName="img/img3.png" xy="0,0" size="1280,720">
       <relation target="" sidePair="width-width,height-height,center-center,middle-middle"/>
     </image>
-    <component id="n5_ngfr" name="btnOpenShop" src="ngfr2" fileName="Item/ButtonStart.xml" xy="273,281" pivot="0.5,0.5">
-      <relation target="" sidePair="center-center,bottom-bottom"/>
+    <component id="n5_ngfr" name="btnOpenShop" src="ngfr2" fileName="Item/ButtonStart.xml" xy="295,285" pivot="0.5,0.5">
+      <relation target="" sidePair="left-left,top-top"/>
     </component>
-    <component id="n13_k0bm" name="btnCatchDemon" src="ngfr2" fileName="Item/ButtonStart.xml" xy="274,741" pivot="0.5,0.5">
-      <relation target="" sidePair="center-center,bottom-bottom"/>
+    <component id="n13_k0bm" name="btnCatchDemon" src="ngfr2" fileName="Item/ButtonStart.xml" xy="855,278" pivot="0.5,0.5">
+      <relation target="" sidePair="right-right,top-top"/>
     </component>
-    <text id="n14_k0bm" name="text1" xy="111,356" pivot="0.5,0" size="471,258" fontSize="20" autoSize="none" text="">
-      <relation target="" sidePair="center-center"/>
+    <text id="n14_k0bm" name="text1" xy="150,370" pivot="0.5,0" size="471,258" fontSize="20" autoSize="none" text="">
       <relation target="n5_ngfr" sidePair="top-bottom"/>
+      <relation target="" sidePair="left-left"/>
     </text>
-    <text id="n15_k0bm" name="text2" xy="114,826" pivot="0.5,0" size="471,258" fontSize="20" autoSize="none" text="">
-      <relation target="" sidePair="center-center"/>
-      <relation target="n5_ngfr" sidePair="top-bottom"/>
+    <text id="n15_k0bm" name="text2" xy="700,365" pivot="0.5,0" size="471,258" fontSize="20" autoSize="none" text="">
+      <relation target="" sidePair="right-right"/>
+      <relation target="n13_k0bm" sidePair="top-bottom"/>
     </text>
-    <component id="n16_k0bm" name="infoCard" src="ngfrb" fileName="Item/InfoCard.xml" xy="-1,9">
-      <relation target="" sidePair="width-width,height-height,center-center,top-top"/>
+    <component id="n16_k0bm" name="infoCard" src="ngfrb" fileName="Item/InfoCard.xml" xy="274,16">
+      <relation target="" sidePair="center-center,top-top"/>
     </component>
   </displayList>
 </component>

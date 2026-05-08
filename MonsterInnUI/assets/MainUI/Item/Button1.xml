@@ -1,13 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
-<component size="150,45" pivot="0.5,0.5" extention="Button">
+<component size="134,65" pivot="0.5,0.5" extention="Button">
   <controller name="button" pages="0,up,1,down,2,over,3,selectedOver" selected="0"/>
   <displayList>
-    <image id="n3_ngfr" name="n3" src="b50ko" fileName="img/img1.png" xy="0,0" size="150,45">
+    <image id="n3_ngfr" name="n3" src="b50ko" fileName="img/img1.png" xy="0,0" size="134,65">
       <relation target="" sidePair="center-center,middle-middle"/>
+      <relation target="n4_ngfr" sidePair="width-width,height-height"/>
     </image>
-    <text id="n4_ngfr" name="text" xy="24,6" size="100,34" fontSize="24" align="center" vAlign="middle" autoSize="none" text="接待">
+    <text id="n4_ngfr" name="text" xy="24,6" size="84,54" fontSize="40" align="center" vAlign="middle" text="进入">
       <relation target="" sidePair="center-center,middle-middle"/>
     </text>
   </displayList>
   <Button/>
+  <relation target="n4_ngfr" sidePair="width-width,height-height"/>
 </component>

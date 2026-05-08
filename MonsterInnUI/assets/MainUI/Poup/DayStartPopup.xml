@@ -1,19 +1,19 @@
 <?xml version="1.0" encoding="utf-8"?>
-<component size="720,1280" pivot="0.5,0.5">
+<component size="1280,720" pivot="0.5,0.5">
   <displayList>
-    <image id="n0_ngfr" name="n0" src="b50kp" fileName="img/img2.png" xy="72,370" pivot="0.5,0.5">
+    <image id="n0_ngfr" name="n0" src="b50kp" fileName="img/img2.png" xy="344,90" pivot="0.5,0.5">
       <relation target="" sidePair="center-center,middle-middle"/>
     </image>
-    <text id="n2_ngfr" name="txtTitle" xy="170,432" pivot="0.5,0.5" size="380,32" touchable="false" fontSize="22" align="center" vAlign="middle" autoSize="none" text="" input="true">
+    <text id="n2_ngfr" name="txtTitle" xy="442,152" pivot="0.5,0.5" size="380,32" touchable="false" fontSize="22" align="center" vAlign="middle" autoSize="none" text="" input="true">
       <relation target="n0_ngfr" sidePair="center-center,top-top"/>
     </text>
-    <text id="n6_ngfr" name="txtDayInfo" xy="355,484" pivot="0.5,0.5" size="10,32" fontSize="22" align="center" vAlign="middle" text="">
+    <text id="n6_ngfr" name="txtDayInfo" xy="627,204" pivot="0.5,0.5" size="10,32" fontSize="22" align="center" vAlign="middle" text="">
       <relation target="n0_ngfr" sidePair="center-center,top-top"/>
     </text>
-    <list id="n7_ngfr" name="wantedList" xy="210,529" pivot="0.5,0.5" size="300,200" overflow="scroll" defaultItem="ui://9wzmpf18ngfr5" align="center">
+    <list id="n7_ngfr" name="wantedList" xy="482,249" pivot="0.5,0.5" size="300,200" overflow="scroll" defaultItem="ui://9wzmpf18ngfr5" align="center">
       <relation target="n0_ngfr" sidePair="center-center,top-top"/>
     </list>
-    <component id="n8_ngfr" name="btnStart" src="ngfr2" fileName="Item/ButtonStart.xml" xy="285,800" pivot="0.5,0.5">
+    <component id="n8_ngfr" name="btnStart" src="ngfr2" fileName="Item/ButtonStart.xml" xy="520,504" pivot="0.5,0.5">
       <relation target="n0_ngfr" sidePair="center-center,top-top"/>
     </component>
   </displayList>

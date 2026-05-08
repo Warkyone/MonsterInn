@@ -13,7 +13,7 @@ export class CanvasFitSetup extends Component {
 
     onLoad() {
         // 设计分辨率 720x1280（竖屏）
-        // FIXED_HEIGHT = 按高度铺满，宽度自适应
+        // FIXED_WIDTH = 按宽度铺满，高度自适应（完整显示，不裁切）
         view.setDesignResolutionSize(720, 1280, ResolutionPolicy.FIXED_HEIGHT);
         console.log('[CanvasFitSetup] 竖屏适配: 720x1280 FIXED_HEIGHT');
     }
