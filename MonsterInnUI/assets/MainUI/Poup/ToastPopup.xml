@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<component size="400,48" pivot="0.5,0.5">
+  <displayList>
+    <graph id="n0_ngfr" name="n0" xy="0,0" size="400,48" type="rect" lineSize="0" lineColor="#b2000000" fillColor="#ff333333" corner="20">
+      <relation target="" sidePair="width-width,height-height,center-center,middle-middle"/>
+    </graph>
+    <text id="n1_ngfr" name="txtMsg" xy="154,9" pivot="0.5,0.5" size="84,29" fontSize="20" color="#ffffff" align="center" vAlign="middle" text="测试测试">
+      <relation target="" sidePair="center-center,middle-middle"/>
+    </text>
+  </displayList>
+</component>

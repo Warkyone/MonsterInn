@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+
+  <title>Cocos Creator | MonsterInn</title>
+
+  <meta name="viewport"
+        content="width=device-width,user-scalable=no,initial-scale=1,minimum-scale=1,maximum-scale=1,minimal-ui=true"/>
+
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="format-detection" content="telephone=no">
+
+  <meta name="renderer" content="webkit"/>
+  <meta name="force-rendering" content="webkit"/>
+  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1"/>
+  <meta name="msapplication-tap-highlight" content="no">
+
+  <meta name="full-screen" content="yes"/>
+  <meta name="x5-fullscreen" content="true"/>
+  <meta name="360-fullscreen" content="true"/>
+  <meta name="x5-page-mode" content="app">
+
+  <link rel="stylesheet" type="text/css" href="style.css"/>
+
+  <style>
+    /* 手机端强制旋转整个游戏容器为横屏 */
+    @media (max-aspect-ratio: 1/1) {
+      #GameDiv {
+        position: fixed !important;
+        top: 0 !important;
+        left: 0 !important;
+        width: 100vh !important;
+        height: 100vw !important;
+        transform-origin: center center;
+        transform: rotate(90deg);
+        transform: translate(0, -100vw) rotate(90deg);
+      }
+    }
+    /* 横屏设备（电脑/已横屏手机）正常显示 */
+    @media (min-aspect-ratio: 1/1) {
+      #GameDiv {
+        position: relative;
+        width: 100%;
+        height: 100%;
+      }
+    }
+  </style>
+</head>
+<body style="margin:0; padding:0; overflow:hidden; background:#000;">
+  <div id="GameDiv" cc_exact_fit_screen="true">
+    <div id="Cocos3dGameContainer">
+      <canvas id="GameCanvas" oncontextmenu="event.preventDefault()" tabindex="99"></canvas>
+    </div>
+  </div>
+
+<!-- Polyfills bundle. -->
+<script src="src/polyfills.bundle.js" charset="utf-8"> </script>
+
+<!-- SystemJS support. -->
+<script src="src/system.bundle.js" charset="utf-8"> </script>
+
+<!-- Import map -->
+<script src="src/import-map.json" type="systemjs-importmap" charset="utf-8"> </script>
+
+<script>
+(function() {
+  var canvas = document.getElementById('GameCanvas');
+  var parent = canvas.parentElement;
+
+  function resizeCanvas() {
+    var bcr = parent.getBoundingClientRect();
+    canvas.width = bcr.width;
+    canvas.height = bcr.height;
+  }
+
+  window.addEventListener('resize', resizeCanvas);
+  window.addEventListener('orientationchange', function() {
+    setTimeout(resizeCanvas, 300);
+  });
+  resizeCanvas();
+})();
+</script>
+
+<script>
+  System.import('./index.js').catch(function(err) { console.error(err); })
+</script>
+
+</body>
+</html>

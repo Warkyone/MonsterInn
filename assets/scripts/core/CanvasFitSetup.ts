@@ -1,0 +1,20 @@
+﻿import { _decorator, Component, ResolutionPolicy, view } from 'cc';
+const { ccclass, executionOrder } = _decorator;
+
+/**
+ * CanvasFitSetup
+ * 挂到 Canvas 节点上
+ * 竖屏适配模式：按宽度缩放（Fit Width）
+ * 设计分辨率 720x1280（9:16 手机竖屏）
+ */
+@ccclass('CanvasFitSetup')
+@executionOrder(-1000)
+export class CanvasFitSetup extends Component {
+
+    onLoad() {
+        // 设计分辨率 720x1280（竖屏）
+        // FIXED_HEIGHT = 按高度铺满，宽度自适应
+        view.setDesignResolutionSize(720, 1280, ResolutionPolicy.FIXED_HEIGHT);
+        console.log('[CanvasFitSetup] 竖屏适配: 720x1280 FIXED_HEIGHT');
+    }
+}

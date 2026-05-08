@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<component size="720,1280">
+  <displayList>
+    <image id="n0_ngfr" name="bg" src="ngfrm" fileName="img/main.jpg" xy="0,0" size="720,1280">
+      <relation target="" sidePair="width-width,height-height,center-center,middle-middle"/>
+    </image>
+    <component id="n4_ngfr" name="btnNewGame" src="ngfr2" fileName="Item/ButtonStart.xml" xy="305,789" size="100,30" aspect="true">
+      <relation target="" sidePair="center-center,bottom-bottom"/>
+    </component>
+    <component id="n5_ucqw" name="btnContinue" src="ngfr2" fileName="Item/ButtonStart.xml" xy="282,898">
+      <relation target="" sidePair="center-center,bottom-bottom"/>
+    </component>
+  </displayList>
+</component>

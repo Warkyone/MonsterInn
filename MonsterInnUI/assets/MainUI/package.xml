@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<packageDescription id="9wzmpf18">
+  <resources>
+    <component id="ngfr2" name="ButtonStart.xml" path="/Item/"/>
+    <component id="ngfr5" name="ListItem.xml" path="/Item/"/>
+    <component id="ngfr7" name="DayStartPopup.xml" path="/Poup/" exported="true"/>
+    <component id="ngfr8" name="DayEndPopup.xml" path="/Poup/" exported="true"/>
+    <component id="ngfra" name="ButtonClose.xml" path="/Item/"/>
+    <component id="ngfrb" name="InfoCard.xml" path="/Item/" exported="true"/>
+    <component id="ngfrc" name="Button1.xml" path="/Item/"/>
+    <image id="ngfrm" name="main.jpg" path="/img/"/>
+    <component id="ngfrn" name="ToastPopup.xml" path="/Poup/" exported="true"/>
+    <component id="hqvd0" name="MainMenu.xml" path="/" exported="true"/>
+    <component id="ngfr4" name="OpenShopMainUI.xml" path="/" exported="true"/>
+    <component id="ngfr9" name="TransitionScene.xml" path="/" exported="true"/>
+    <image id="b50ko" name="img1.png" path="/img/" scale="9grid" scale9grid="25,6,50,12"/>
+    <image id="b50kp" name="img2.png" path="/img/" scale="9grid" scale9grid="60,56,463,444"/>
+    <image id="b50kq" name="img3.png" path="/img/" scale="9grid" scale9grid="119,113,238,226"/>
+    <component id="k0bmr" name="GameMain.xml" path="/" exported="true"/>
+  </resources>
+  <publish name="MainUI" path="C:\Users\warkyone\Desktop\MonsterInn\assets\resources" packageCount="2"/>
+</packageDescription>

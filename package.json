@@ -1,0 +1,10 @@
+{
+  "name": "MonsterInn",
+  "uuid": "70c5958d-f52f-473f-802a-47189cb8c738",
+  "creator": {
+    "version": "3.8.8"
+  },
+  "dependencies": {
+    "fairygui-cc": "^1.2.2"
+  }
+}

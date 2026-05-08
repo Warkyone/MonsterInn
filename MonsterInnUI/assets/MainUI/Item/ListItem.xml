@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<component size="300,50">
+  <displayList>
+    <text id="n0_ngfr" name="txtLeft" xy="9,9" pivot="0,0.5" size="10,34" fontSize="24" vAlign="middle" text="">
+      <relation target="" sidePair="middle-middle,left-left"/>
+    </text>
+    <text id="n1_ngfr" name="txtRight" xy="283,10" pivot="1,0.5" size="10,34" fontSize="24" vAlign="middle" text="">
+      <relation target="" sidePair="middle-middle,right-right"/>
+    </text>
+  </displayList>
+</component>
