@@ -219,9 +219,9 @@ export class GuestSystem {
         console.log(this.todayWantedList)
         console.log(gm.remainingGuests)
         // 第一个客人入店时启动耐心计时器
-        // if (!this.patienceTimer && this.guests.length > 0) {
-        //     this.startPatienceTimer();
-        // }
+        if (!this.patienceTimer && this.guests.length > 0) {
+            this.startPatienceTimer();
+        }
 
         return guest;
     }
