@@ -4,7 +4,7 @@
     <image id="n0_ngfr" name="bg" src="b50kq" fileName="img/img3.png" xy="-1,0" size="720,1280">
       <relation target="" sidePair="width-width,height-height,center-center,middle-middle"/>
     </image>
-    <text id="n2_ngfr" name="txtWantedTitle" xy="533,172" pivot="1,0.5" size="161,32" touchable="false" fontSize="22" align="right" vAlign="middle" autoSize="none" text="" input="true">
+    <text id="n2_ngfr" name="txtWantedTitle" xy="365,172" pivot="1,0.5" size="329,32" touchable="false" fontSize="22" align="right" vAlign="middle" autoSize="none" text="" input="true">
       <relation target="" sidePair="right-right,top-top"/>
     </text>
     <list id="n3_ngfr" name="guestList" xy="13,219" size="300,234" overflow="scroll" defaultItem="ui://9wzmpf18ngfr5" align="center"/>
@@ -20,7 +20,7 @@
     <list id="n8_ngfr" name="wantedList" xy="394,218" size="300,236" overflow="scroll" defaultItem="ui://9wzmpf18ngfr5" align="center">
       <relation target="" sidePair="right-right,top-top"/>
     </list>
-    <text id="n12_ucqw" name="txtGuestTitle" xy="13,172" pivot="0,0.5" size="147,32" touchable="false" fontSize="22" vAlign="middle" autoSize="shrink" text="" input="true">
+    <text id="n12_ucqw" name="txtGuestTitle" xy="13,172" pivot="0,0.5" size="333,32" touchable="false" fontSize="22" vAlign="middle" autoSize="none" text="" input="true">
       <relation target="" sidePair="left-left,top-top"/>
     </text>
     <component id="n13_k0bm" name="infoCard" src="ngfrb" fileName="Item/InfoCard.xml" xy="3,4">

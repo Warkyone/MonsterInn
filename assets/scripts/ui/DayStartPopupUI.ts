@@ -1,7 +1,7 @@
 ﻿import { AppRegistry } from '../core/AppRegistry';
 import * as fgui from 'fairygui-cc';
 import { GTween, EaseType } from 'fairygui-cc';
-import { GameManager } from '../core/GameManager_base';
+import { GameManager } from '../core/GameManager';
 import { GuestSystem } from '../system/GuestSystem';
 import { UI_COMPONENTS } from './UIPackageLoader';
 
@@ -12,13 +12,14 @@ export class DayStartPopupUI {
 
     show(): void {
         const gm = GameManager.instance!;
+        // 生成今日通缉名单
         const wantedList = GuestSystem.instance?.generateWantedList() ?? [];
 
         // 打乱客人队列（通缉犯已加入队列）
-        GuestSystem.instance?.shuffleGuests();
+        // GuestSystem.instance?.shuffleGuests();
 
         const loader = this.getLoader();
-        const popup = loader?.createComp<fgui.GComponent>(UI_COMPONENTS.dayStartPopup) ?? null;
+        const popup = loader?.createComp(UI_COMPONENTS.dayStartPopup) as fgui.GComponent;
 
         this.close();
         this.popup = popup;
@@ -29,6 +30,7 @@ export class DayStartPopupUI {
         this.setText('txtTitle', `📅 第${gm.currentDay}天`);
         this.setText('txtDayInfo', `今日预计客人: ${gm.todayGuestLimit} | 通缉犯: ${wantedList.length}`);
 
+        //通缉犯预告列表
         const wList = popup.getChild('wantedList') as fgui.GList;
         if (wList) {
             wList.removeChildrenToPool();
@@ -88,6 +90,6 @@ export class DayStartPopupUI {
         if (p && bountyText) p.text = bountyText;
     }
 
-    private getLoader() { return this.getApp()?.loader ?? null; }
+    private getLoader() { return this.getApp().loader; }
     private getApp()    { return AppRegistry.getApp(); }
 }

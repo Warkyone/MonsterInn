@@ -1,7 +1,7 @@
 ﻿import { AppRegistry } from '../core/AppRegistry';
 import * as fgui from 'fairygui-cc';
 import { GTween, EaseType } from 'fairygui-cc';
-import { GameManager, GameEvent, GamePhase } from '../core/GameManager_base';
+import { GameManager, GameEvent, GamePhase } from '../core/GameManager';
 import { GuestSystem, Guest } from './GuestSystem';
 import { OrderSystem } from './OrderSystem';
 
@@ -60,9 +60,9 @@ export class GuestSpawner {
 
         gm.events.on(GameEvent.GuestArrived, (data: { guest: Guest }) => {
             OrderSystem.instance?.createOrder(data.guest);
-            this.getApp()?.showGuestNotification(data.guest.cardName, data.guest.cardRace);
-            // this.getApp()?.infoCard.showFirstPending();
-            this.getApp()?.openShopMain.renderGuestList();
+            this.getApp().showGuestNotification(data.guest.cardName, data.guest.cardRace);
+            // this.getApp().infoCard.showFirstPending();
+            this.getApp().openShopMain.renderGuestList();
         }, this);
 
         gm.events.on(GameEvent.DayEnded, () => this.stop(), this);
@@ -71,11 +71,11 @@ export class GuestSpawner {
             if (gm.phase !== GamePhase.Playing) return;
             if (data?.leftGuests?.length) {
                 for (const g of data.leftGuests) {
-                    this.getApp()?.showToast(`😤 ${g.cardName} 愤怒离店，声誉 -5`);
+                    this.getApp().showToast(`😤 ${g.cardName} 愤怒离店，声誉 -5`);
                 }
-                // this.getApp()?.infoCard.showFirstPending();
+                // this.getApp().infoCard.showFirstPending();
             }
-            this.getApp()?.openShopMain.renderGuestList();
+            this.getApp().openShopMain.renderGuestList();
         }, this);
     }
 

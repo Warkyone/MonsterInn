@@ -1,6 +1,6 @@
 ﻿import { AppRegistry } from '../core/AppRegistry';
 import * as fgui from 'fairygui-cc';
-import { GameManager, GamePhase } from '../core/GameManager_base';
+import { GameManager, GamePhase } from '../core/GameManager';
 import { GuestSystem, Guest } from '../system/GuestSystem';
 import { OrderSystem } from '../system/OrderSystem';
 import { UI_COMPONENTS } from './UIPackageLoader';
@@ -22,7 +22,7 @@ export class InfoCardPopupUI {
         }
 
         const loader = this.getLoader();
-        // const popup = loader?.createComp<fgui.GComponent>(UI_COMPONENTS.infoCardPopup) ?? null;
+        // const popup = loader?.createComp<fgui.GComponent>(UI_COMPONENTS.infoCardPopup);
         // if (!popup) return;
 
         // this.popup = popup;
@@ -95,8 +95,8 @@ export class InfoCardPopupUI {
         }
 
         if (result) {
-            this.getApp()?.showToast(result.message);
-            this.getApp()?.gameMain.renderGuestList();
+            this.getApp().showToast(result.message);
+            this.getApp().gameMain.renderGuestList();
         }
 
         this.showFirstPending();
@@ -107,6 +107,6 @@ export class InfoCardPopupUI {
         if (btn) btn.onClick(() => this.onAction(action));
     }
 
-    private getLoader() { return this.getApp()?.loader ?? null; }
+    private getLoader() { return this.getApp().loader; }
     private getApp()    { return AppRegistry.getApp(); }
 }

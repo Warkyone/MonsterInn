@@ -1,14 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
 <component size="720,1280" pivot="0.5,0.5">
   <displayList>
-    <graph id="n0_ngfr" name="n0" xy="0,0" pivot="0.5,0.5" size="720,1280" type="rect" fillColor="#ff999999">
+    <graph id="n0_ngfr" name="n0" xy="0,0" pivot="0.5,0.5" size="720,1280" touchable="false" type="rect" fillColor="#ff999999">
       <relation target="" sidePair="width-width,height-height,center-center,middle-middle"/>
     </graph>
-    <text id="n1_ngfr" name="txtText" xy="355,600" pivot="0.5,0.5" size="10,49" touchable="false" fontSize="36" text="" input="true">
-      <relation target="" sidePair="center-center,middle-middle"/>
-    </text>
+    <text id="n1_ngfr" name="txtText" xy="359,625" pivot="0.5,0.5" anchor="true" size="534,49" touchable="false" fontSize="36" align="center" vAlign="middle" autoSize="none" text="" input="true"/>
     <component id="n7_ngfr" name="btnContinue" src="ngfrc" fileName="Item/Button1.xml" xy="276,1009">
       <relation target="" sidePair="center-center,bottom-bottom"/>
     </component>
+    <text id="n8_k0bm" name="txtCode" xy="360,717" pivot="0.5,0.5" anchor="true" size="532,49" touchable="false" fontSize="36" align="center" vAlign="middle" autoSize="none" text="" input="true"/>
   </displayList>
 </component>

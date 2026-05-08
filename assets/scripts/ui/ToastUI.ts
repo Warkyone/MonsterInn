@@ -71,6 +71,6 @@ export class ToastUI {
         }
     }
 
-    private getLoader() { return this.getApp()?.loader ?? null; }
+    private getLoader() { return this.getApp().loader; }
     private getApp()    { return AppRegistry.getApp(); }
 }

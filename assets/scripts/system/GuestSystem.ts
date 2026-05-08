@@ -1,4 +1,4 @@
-﻿import { GameManager, GameEvent, RepLevel } from '../core/GameManager_base';
+﻿import { GameManager, GameEvent, RepLevel } from '../core/GameManager';
 
 
 // ============================================================
@@ -7,9 +7,9 @@
 
 /** 客人类型：良民 / 信息错误 / 通缉犯 */
 export enum GuestType {
-    Normal    = 'normal',     // 良民：信息正确
+    Normal = 'normal',     // 良民：信息正确
     WrongInfo = 'wrong-info', // 信息错误：某项信息被篡改
-    Wanted    = 'wanted',     // 通缉犯
+    Wanted = 'wanted',     // 通缉犯
 }
 
 /** 客人信息卡 */
@@ -47,19 +47,19 @@ interface MonsterTemplate {
 }
 
 const MONSTER_DB: MonsterTemplate[] = [
-    { name: '鬼力少年', race: 'oni',     desc: '身负巨力的年轻鬼族',    raceMultiplier: 1.0 },
-    { name: '幽灵君',   race: 'slime',   desc: '半透明的灵态妖怪',    raceMultiplier: 1.2 },
-    { name: '妖狐书生',   race: 'fox',     desc: '有书生气的狐狸精',      raceMultiplier: 1.5 },
-    { name: '嗜酒狸猫', race: 'tanuki',  desc: '嗜酒如命的狸猫',      raceMultiplier: 1.0 },
-    { name: '河童博士', race: 'kappa',   desc: '沉迷研究的河童学者',    raceMultiplier: 1.3 },
-    { name: '天狗长老', race: 'tengu',   desc: '德高望重的山岳天狗',    raceMultiplier: 2.0 },
-    { name: '雪女', race: 'yuki',    desc: '冰寒之地的雪之精灵',    raceMultiplier: 1.8 },
-    { name: '灯笼小僧', race: 'chochin', desc: '提灯引路的顽皮小妖',    raceMultiplier: 1.1 },
+    { name: '鬼力少年', race: 'oni', desc: '身负巨力的年轻鬼族', raceMultiplier: 1.0 },
+    { name: '妖狐书生', race: 'fox', desc: '有书生气的狐狸精', raceMultiplier: 1.5 },
+    { name: '幽灵君', race: 'slime', desc: '半透明的灵态妖怪', raceMultiplier: 1.2 },
+    { name: '暗夜狸猫', race: 'tanuki', desc: '嗜酒如命的狸猫', raceMultiplier: 1.0 },
+    { name: '河童博士', race: 'kappa', desc: '沉迷研究的河童学者', raceMultiplier: 1.3 },
+    { name: '天狗长老', race: 'tengu', desc: '德高望重的山岳天狗', raceMultiplier: 2.0 },
+    { name: '雪女', race: 'yuki', desc: '冰寒之地的雪之精灵', raceMultiplier: 1.8 },
+    { name: '灯笼小龙', race: 'chochin', desc: '提灯引路的顽皮小妖', raceMultiplier: 1.1 },
 ];
 
 /** 种族显示名映射 */
 const RACE_LABELS: Record<string, string> = {
-    oni: '鬼族', slime: '幽灵', fox: '妖狐', tanuki: '狸猫',
+    oni: '鬼族', fox: '妖狐', slime: '幽灵', tanuki: '狸妖',
     kappa: '河童', tengu: '天狗', yuki: '雪女', chochin: '灯妖',
 };
 
@@ -68,19 +68,19 @@ const RACE_ICON_INDEX: Record<string, number> = {
     oni: 1,      // 鬼力少年 → 1.jpg
     fox: 2,      // 妖狐书生 → 2.jpg
     slime: 3,    // 幽灵君 → 3.jpg
-    tanuki: 4,   // 嗜酒狸猫 → 4.jpg
+    tanuki: 4,   // 暗夜狸猫 → 4.jpg
     kappa: 5,    // 河童博士 → 5.jpg
     tengu: 6,    // 天狗长老 → 6.jpg
     yuki: 7,     // 雪女 → 7.jpg
-    chochin: 8,  // 灯笼小僧 → 8.jpg
+    chochin: 8,  // 灯笼小龙 → 8.jpg
 };
 
-/** 错误信息类型 */
-enum WrongInfoType {
-    NameMismatch = 'name-mismatch',   // 种族标签错误（名字正确，种族标签与名字不匹配）
-    RaceMismatch = 'race-mismatch',   // 种族标签错误（名字正确，种族标签与名字不匹配）
-    DescMismatch = 'desc-mismatch',   // 描述错误（名字+种族标签正确，描述来自另一个种族）
-}
+// /** 错误信息类型 */
+// enum WrongInfoType {
+//     NameMismatch = 'name-mismatch',   // 种族标签错误（名字正确，种族标签与名字不匹配）
+//     RaceMismatch = 'race-mismatch',   // 种族标签错误（名字正确，种族标签与名字不匹配）
+//     DescMismatch = 'desc-mismatch',   // 描述错误（名字+种族标签正确，描述来自另一个种族）
+// }
 
 export class GuestSystem {
 
@@ -123,7 +123,7 @@ export class GuestSystem {
     /** 生成今日通缉名单（开店时预生成并直接加入客人队列） */
     generateWantedList(): Guest[] {
         this.todayWantedList = [];
-        const wantedCount = Math.floor(Math.random() * 3) + 1; // 1~3 个通缉犯（确保至少1个）
+        const wantedCount = 1 + Math.floor(Math.random() * 3); // 0~2 个通缉犯
 
         // 打乱 MONSTER_DB，确保通缉犯之间信息不重复
         const shuffled = [...MONSTER_DB].sort(() => Math.random() - 0.5);
@@ -149,7 +149,7 @@ export class GuestSystem {
             };
 
             this.todayWantedList.push(wanted);
-            this.guests.push(wanted); // 直接加入客人队列
+            // this.guests.push(wanted); // 直接加入客人队列
         }
 
         console.log(`[GuestSystem] 今日通缉名单 (${this.todayWantedList.length}人): ${this.todayWantedList.map(w => w.realName).join(', ')}`);
@@ -157,13 +157,13 @@ export class GuestSystem {
     }
 
     /** 打乱客人队列（Fisher-Yates 洗牌算法） */
-    shuffleGuests(): void {
-        for (let i = this.guests.length - 1; i > 0; i--) {
-            const j = Math.floor(Math.random() * (i + 1));
-            [this.guests[i], this.guests[j]] = [this.guests[j], this.guests[i]];
-        }
-        console.log('[GuestSystem] 客人队列已打乱');
-    }
+    // shuffleGuests(): void {
+    //     for (let i = this.guests.length - 1; i > 0; i--) {
+    //         const j = Math.floor(Math.random() * (i + 1));
+    //         [this.guests[i], this.guests[j]] = [this.guests[j], this.guests[i]];
+    //     }
+    //     console.log('[GuestSystem] 客人队列已打乱');
+    // }
 
     /** 获取今日通缉名单 */
     getWantedList(): ReadonlyArray<Guest> {
@@ -188,34 +188,57 @@ export class GuestSystem {
         if (!gm || !gm.isPlaying) return null;
         if (gm.remainingGuests <= 0) return null;
 
-        // 决定客人类型（通缉犯已在开店时加入队列）
+        // 决定客人类型
         const guestType = this.rollGuestType();
         let guest: Guest;
 
+        //不一定来通缉犯
+        // if (gm.remainingGuests <= 1 && this.todayWantedList.length != 0) {
+        //     // 最后一个客人，如果还有未生成的通缉犯，强制生成通缉犯
+        //     guest = this.todayWantedList[0];
+        //     this.todayWantedList.shift(); // 从通缉名单中移除（确保同一通缉犯只生成一次）
+        // } else {
         if (guestType === GuestType.WrongInfo) {
             guest = this.createWrongInfoGuest();
+        } else if (guestType === GuestType.Wanted) {
+            guest = this.todayWantedList[0]; // 从通缉名单中取第一个（已预生成但未加入队列的通缉犯）
+            this.todayWantedList.shift(); // 从通缉名单中移除（确保同一通缉犯只生成一次）
         } else {
             guest = this.createNormalGuest();
         }
-
+        // }
         this.guests.push(guest);
-        gm.onGuestSpawned();
+
+        //不是通缉犯，才算入店
+        if (guestType !== GuestType.Wanted) gm.onGuestSpawned();
+
         console.log(`[GuestSystem] ${guest.cardName} [${guest.cardRace}] 入店 (${guest.guestType})`);
         GameManager.instance?.events.emit(GameEvent.GuestArrived, { guest });
 
+        console.log(guest)
+        console.log(this.todayWantedList)
+        console.log(gm.remainingGuests)
         // 第一个客人入店时启动耐心计时器
-        if (!this.patienceTimer && this.guests.length > 0) {
-            this.startPatienceTimer();
-        }
+        // if (!this.patienceTimer && this.guests.length > 0) {
+        //     this.startPatienceTimer();
+        // }
 
         return guest;
     }
 
-    /** 概率决定客人类型（通缉犯已在开店时加入，这里只生成良民和伪装者） */
+    /** 概率决定客人类型（生成良民和伪装者） */
     private rollGuestType(): GuestType {
         const rand = Math.random();
-        // 信息错误: 25%, 良民: 75%（声誉影响比例待实现）
-        if (rand < 0.25) {
+        // 信息错误: 20%, 良民: 80%
+        const wantedList = GuestSystem.instance?.getWantedList() ?? [];
+        //增加通缉犯出现概率
+        if (wantedList.length != 0) {
+            const wantedChance = 0.3 * wantedList.length; // 每个通缉犯增加40%概率
+            if (rand < wantedChance) {
+                return GuestType.Wanted;
+            }
+        }
+        if (rand < 0.20) {
             return GuestType.WrongInfo;
         }
         return GuestType.Normal;
@@ -271,7 +294,7 @@ export class GuestSystem {
     private selectedGuest: Guest | null = null;
 
     /** 设置当前选中客人 */
-    selectGuest(guest: Guest): void {
+    selectGuest(guest: any): void {
         this.selectedGuest = guest;
         console.log(`[GuestSystem] 选中客人: ${guest.cardName} [${guest.cardRace}]`);
     }

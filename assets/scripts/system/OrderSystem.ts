@@ -1,4 +1,4 @@
-﻿import { GameManager, GameEvent } from '../core/GameManager_base';
+﻿import { GameManager, GameEvent } from '../core/GameManager';
 import { GuestSystem, Guest, GuestType } from './GuestSystem';
 
 // ============================================================
@@ -80,7 +80,7 @@ export class OrderSystem {
     acceptGuest(guestId: string): { success: boolean; coinDelta: number; repDelta: number; message: string } {
         const guest = GuestSystem.instance?.getGuest(guestId);
         const order = this.orders.find(o => o.guestId === guestId && o.status === OrderStatus.Pending);
-        if (!guest || !order) return { success: false, coinDelta: 0, repDelta: 0, message: '客人不存在' };
+        if (!guest || !order) return { success: false, coinDelta: 0, repDelta: 0, message: '客人还没来，请耐心等待' };
 
         const gm = GameManager.instance!;
         let coinDelta = 0;
@@ -101,7 +101,7 @@ export class OrderSystem {
                 order.status = OrderStatus.Accepted;
                 coinDelta = Math.floor(order.reward * 0.3); // 只给少部分钱
                 repDelta = REP_REWARDS.acceptWrongInfo;
-                message = `❌ 信息有误！被骗了！+${coinDelta}金币 ${repDelta}声誉`;
+                message = `❌ 伪装者骗过了你！收入减少！+${coinDelta}金币 ${repDelta}声誉`;
                 break;
 
             case GuestType.Wanted:
@@ -109,7 +109,7 @@ export class OrderSystem {
                 order.status = OrderStatus.Accepted;
                 coinDelta = order.reward;
                 repDelta = REP_REWARDS.acceptWanted;
-                message = `🚨 通缉犯逃脱！${repDelta}声誉！`;
+                message = `🚨 通缉犯逍遥法外！${repDelta}声誉！`;
                 break;
         }
 
@@ -197,7 +197,7 @@ export class OrderSystem {
         gm.changeRep(repDelta);
         GuestSystem.instance?.markServed(guestId);
         GuestSystem.instance?.removeGuest(guestId);
-        gm.onGuestServed(guest.guestType === GuestType.Wanted);
+        gm.onGuestServed(guest.guestType === GuestType.Wanted,true);
 
         return { success: true, coinDelta, repDelta, message };
     }

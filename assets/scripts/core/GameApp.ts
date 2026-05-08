@@ -1,7 +1,8 @@
-﻿import { _decorator, Component } from 'cc';
+﻿// @ts-ignore
+import { _decorator, Component } from 'cc';
 import * as fgui from 'fairygui-cc';
 
-import { GameManager, GameEvent } from './GameManager_base';
+import { GameManager, GameEvent } from './GameManager';
 import { AppRegistry } from './AppRegistry';
 import { GuestSystem } from '../system/GuestSystem';
 import { OrderSystem } from '../system/OrderSystem';
@@ -131,7 +132,7 @@ export class GameApp extends Component {
         if (!gm) return;
         gm.beginBusiness();
         this.openShopMain.enterBusinessMode();
-        this.spawner.start();
+        this.spawner.start();// 开始生成客人
     }
 
     showDayEnd(): void {

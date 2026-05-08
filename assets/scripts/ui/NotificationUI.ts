@@ -79,6 +79,6 @@ export class NotificationUI {
         setTimeout(() => this.rearrange(), this.LEAVE_S * 1000);
     }
 
-    private getLoader() { return this.getApp()?.loader ?? null; }
+    private getLoader() { return this.getApp().loader; }
     private getApp()    { return AppRegistry.getApp(); }
 }

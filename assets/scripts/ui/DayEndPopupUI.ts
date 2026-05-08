@@ -1,7 +1,7 @@
 ﻿import { AppRegistry } from '../core/AppRegistry';
 import * as fgui from 'fairygui-cc';
 import { GTween, EaseType } from 'fairygui-cc';
-import { GameManager } from '../core/GameManager_base';
+import { GameManager } from '../core/GameManager';
 import { UI_COMPONENTS } from './UIPackageLoader';
 
 /** 每日结算弹窗（普通类，由 GameApp 持有） */
@@ -16,11 +16,11 @@ export class DayEndPopupUI {
             : 0;
 
         const loader = this.getLoader();
-        const popup = loader?.createComp<fgui.GComponent>(UI_COMPONENTS.dayEndPopup) ?? null;
+        const popup = loader?.createComp(UI_COMPONENTS.dayEndPopup) as fgui.GComponent;
 
         if (!popup) {
             console.warn('[DayEndPopupUI] DayEndPopup 不存在，直接过场');
-            setTimeout(() => this.getApp()?.showTransition(), 500);
+            setTimeout(() => this.getApp().showTransition(), 500);
             return;
         }
 
@@ -35,7 +35,7 @@ export class DayEndPopupUI {
         this.setText('txtAccuracy',    `正确率: ${accuracy}%`);
         this.setText('txtCoinEarned',  `💰 收入: +${gm.todayCoinEarned}`);
         this.setText('txtRepDelta',    `⭐ 声誉: ${gm.todayRepDelta >= 0 ? '+' : ''}${gm.todayRepDelta}`);
-        this.setText('txtWantedCaught',`⚠️ 通缉: ${gm.todayWantedCaught}/${gm.todayWantedTotal}`);
+        this.setText('txtWantedCaught',`⚠️ 遭遇并缉拿: ${gm.todayWantedCaught}/${gm.todayWantedTotal}`);
 
         const btnContinue = popup.getChild('btnContinue') as fgui.GButton;
         btnContinue.getChild('text').text = '闭店休息';
@@ -43,7 +43,7 @@ export class DayEndPopupUI {
         if (btnContinue) {
             btnContinue.onClick(() => {
                 this.close();
-                this.getApp()?.showTransition();
+                this.getApp().showTransition();
             });
         }
 
@@ -69,6 +69,6 @@ export class DayEndPopupUI {
             .onUpdate((t: any) => { if (!popup.isDisposed) popup.setScale(t.value.x, t.value.y); });
     }
 
-    private getLoader() { return this.getApp()?.loader ?? null; }
+    private getLoader() { return this.getApp().loader; }
     private getApp()    { return AppRegistry.getApp(); }
 }

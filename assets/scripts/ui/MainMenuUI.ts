@@ -1,6 +1,6 @@
 ﻿import { AppRegistry } from '../core/AppRegistry';
 import * as fgui from 'fairygui-cc';
-import { GameManager, GamePhase } from '../core/GameManager_base';
+import { GameManager, GamePhase } from '../core/GameManager';
 import { UI_COMPONENTS } from './UIPackageLoader';
 
 /** 主菜单界面（普通类，由 GameApp 持有） */
@@ -16,7 +16,7 @@ export class MainMenuUI {
         const loader = this.getLoader();
         if (!loader) return;
 
-        const panel = loader.createComp<fgui.GComponent>(UI_COMPONENTS.mainMenu);
+        const panel = loader.createComp(UI_COMPONENTS.mainMenu) as fgui.GComponent;
         if (!panel) {
             console.warn('[MainMenuUI] MainMenu 组件不存在');
             return;
@@ -29,7 +29,7 @@ export class MainMenuUI {
         panel.setSize(fgui.GRoot.inst.width, fgui.GRoot.inst.height);
         fgui.GRoot.inst.addChild(panel);
 
-        this.updateSaveInfo();
+        this.updateSaveInfo();//存档信息
         this.bindButtons();
         // this.setUI();
 
@@ -68,21 +68,19 @@ export class MainMenuUI {
 
         const btnNew = this.panel.getChild('btnNewGame') as fgui.GButton;
         const btnContinue = this.panel.getChild('btnContinue') as fgui.GButton;
-
         btnNew.getChild("text").text="开始游戏";
         btnContinue.getChild("text").text="继续游戏";
 
-
         this.bindBtn(btnNew, () => {
             gm.newGame();
-            this.getApp()?.showGameMain();
+            this.getApp().showGameMain();
         });
 
         this.bindBtn(btnContinue, () => {
             if (gm.loadGame()) {
-                this.getApp()?.showGameMain();
+                this.getApp().showGameMain();
             } else {
-                this.getApp()?.showToast('读档失败');
+                this.getApp().showToast('读档失败');
             }
         });
 
@@ -100,14 +98,14 @@ export class MainMenuUI {
         btn.on(fgui.Event.TOUCH_END, () => {
             fgui.GTween.to(0.9, 1, 0.12).setEase(fgui.EaseType.BackOut).onUpdate((t: any) => btn.setScale(t.value.x, t.value.x));
         });
-        btn.on(fgui.Event.TOUCH_CANCEL, () => {
-            fgui.GTween.to(0.9, 1, 0.12).setEase(fgui.EaseType.BackOut).onUpdate((t: any) => btn.setScale(t.value.x, t.value.x));
-        });
+        // btn.on(fgui.Event.TOUCH_CANCEL, () => {
+        //     fgui.GTween.to(0.9, 1, 0.12).setEase(fgui.EaseType.BackOut).onUpdate((t: any) => btn.setScale(t.value.x, t.value.x));
+        // });
         btn.onClick(cb);
     }
 
     private getLoader() {
-        return (this.getApp() as any)?.loader ?? null;
+        return (this.getApp() as any)?.loader;
     }
 
     private getApp() {

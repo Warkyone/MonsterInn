@@ -1,6 +1,6 @@
 ﻿import { AppRegistry } from '../core/AppRegistry';
 import * as fgui from 'fairygui-cc';
-import { GameManager, GamePhase } from '../core/GameManager_base';
+import { GameManager, GamePhase } from '../core/GameManager';
 import { GuestSystem } from '../system/GuestSystem';
 import { OrderSystem } from '../system/OrderSystem';
 import { UI_COMPONENTS } from './UIPackageLoader';
@@ -14,10 +14,10 @@ export class TransitionSceneUI {
         const gm = GameManager.instance!;
         gm.phase = GamePhase.Transition;
 
-        // this.getApp()?.infoCard.close();
+        // this.getApp().infoCard.close();
 
         const loader = this.getLoader();
-        const scene = loader?.createComp<fgui.GComponent>(UI_COMPONENTS.transitionScene) ?? null;
+        const scene = loader?.createComp(UI_COMPONENTS.transitionScene) as fgui.GComponent;
 
         if (scene) {
             this.close();
@@ -27,7 +27,9 @@ export class TransitionSceneUI {
             scene.setPosition(0, 0);
 
             const txt = scene.getChild('txtText') as fgui.GTextField;
-            if (txt) txt.text = `🌙 第${gm.currentDay}天结束...\n💾 记录完成`;
+            if (txt) txt.text = `🌙 第${gm.currentDay}天结束...`;
+            const code = scene.getChild('txtCode') as fgui.GTextField;
+            if (code) code.text = `💾 记录完成`;
 
             const btn = scene.getChild('btnContinue') as fgui.GButton;
             btn.getChild("text").text = '进入明日';
@@ -52,9 +54,9 @@ export class TransitionSceneUI {
         GuestSystem.instance?.clearTodayGuests();
         OrderSystem.instance?.clearTodayOrders();
         gm.finishTransition();
-        this.getApp()?.showGameMain();
+        this.getApp().showGameMain();
     }
 
-    private getLoader() { return this.getApp()?.loader ?? null; }
+    private getLoader() { return this.getApp().loader; }
     private getApp()    { return AppRegistry.getApp(); }
 }
