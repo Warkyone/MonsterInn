@@ -14,9 +14,9 @@ export class DayStartPopupUI {
         const gm = GameManager.instance!;
         // 生成今日通缉名单
         const wantedList = GuestSystem.instance?.generateWantedList() ?? [];
-
-        // 打乱客人队列（通缉犯已加入队列）
-        // GuestSystem.instance?.shuffleGuests();
+        // console.warn(GameManager.instance!._todayGuestLimit)
+        // console.warn(wantedList)
+        GameManager.instance!._todayGuestLimit += wantedList.length; // 确保通缉犯也算入当日总客人数量
 
         const loader = this.getLoader();
         const popup = loader?.createComp(UI_COMPONENTS.dayStartPopup) as fgui.GComponent;

@@ -1,26 +1,28 @@
 <?xml version="1.0" encoding="utf-8"?>
 <component size="1280,720">
   <displayList>
-    <image id="n0_ngfr" name="bg" src="b50kq" fileName="img/img3.png" xy="-1,0" size="1280,720">
+    <image id="n0_ngfr" name="bg" src="b50kq" fileName="img/img3.png" xy="0,0" size="1280,720">
       <relation target="" sidePair="width-width,height-height,center-center,middle-middle"/>
     </image>
-    <text id="n2_ngfr" name="txtWantedTitle" xy="936,168" pivot="1,0.5" size="329,32" touchable="false" fontSize="22" align="right" vAlign="middle" autoSize="none" text="" input="true">
+    <text id="n2_ngfr" name="txtWantedTitle" xy="936,164" pivot="1,0.5" size="329,39" touchable="false" fontSize="24" align="right" vAlign="middle" autoSize="none" text="" input="true">
       <relation target="" sidePair="right-right,top-top"/>
     </text>
-    <list id="n3_ngfr" name="guestList" xy="13,219" size="300,234" overflow="scroll" defaultItem="ui://9wzmpf18ngfr5" align="center"/>
-    <component id="n14_k0bm" name="btnA" src="ngfrc" fileName="Item/Button1.xml" xy="377,569" group="n17_k0bm"/>
-    <component id="n15_k0bm" name="btnB" src="ngfrc" fileName="Item/Button1.xml" xy="784,569" group="n17_k0bm"/>
-    <component id="n16_k0bm" name="btnC" src="ngfrc" fileName="Item/Button1.xml" xy="563,629" group="n17_k0bm"/>
-    <group id="n17_k0bm" name="btnGroup" xy="377,569" size="557,105" visible="false" advanced="true">
+    <list id="n3_ngfr" name="guestList" xy="13,219" size="300,234" overflow="scroll" defaultItem="ui://9wzmpf18ngfr5" align="center">
+      <relation target="" sidePair="left-left,top-top"/>
+    </list>
+    <component id="n14_k0bm" name="btnA" src="ngfrc" fileName="Item/Button1.xml" xy="378,564" group="n17_k0bm"/>
+    <component id="n15_k0bm" name="btnB" src="ngfrc" fileName="Item/Button1.xml" xy="785,564" group="n17_k0bm"/>
+    <component id="n16_k0bm" name="btnC" src="ngfrc" fileName="Item/Button1.xml" xy="596,632" group="n17_k0bm"/>
+    <group id="n17_k0bm" name="btnGroup" xy="378,564" size="541,133" visible="false" advanced="true">
       <relation target="" sidePair="center-center,bottom-bottom"/>
     </group>
-    <component id="n5_ngfr" name="btnOpenShop" src="ngfr2" fileName="Item/ButtonStart.xml" xy="564,570" pivot="0.5,0.5">
+    <component id="n5_ngfr" name="btnOpenShop" src="ngfr2" fileName="Item/ButtonStart.xml" xy="548,564" pivot="0.5,0.5">
       <relation target="" sidePair="center-center,bottom-bottom"/>
     </component>
     <list id="n8_ngfr" name="wantedList" xy="954,218" size="300,236" overflow="scroll" defaultItem="ui://9wzmpf18ngfr5" align="center">
       <relation target="" sidePair="right-right,top-top"/>
     </list>
-    <text id="n12_ucqw" name="txtGuestTitle" xy="13,172" pivot="0,0.5" size="333,32" touchable="false" fontSize="22" vAlign="middle" autoSize="none" text="" input="true">
+    <text id="n12_ucqw" name="txtGuestTitle" xy="13,168" pivot="0,0.5" size="333,39" touchable="false" fontSize="24" vAlign="middle" autoSize="none" text="" input="true">
       <relation target="" sidePair="left-left,top-top"/>
     </text>
     <component id="n13_k0bm" name="infoCard" src="ngfrb" fileName="Item/InfoCard.xml" xy="285,3">
@@ -29,5 +31,11 @@
     <loader id="n18_k0bm" name="guestIcon" xy="376,159" pivot="0.5,0.5" size="550,400">
       <relation target="" sidePair="center-center,middle-middle"/>
     </loader>
+    <text id="n21_jg3t" name="txtNO1" xy="12,219" pivot="0.5,0.5" size="300,50" visible="false" fontSize="36" align="center" vAlign="middle" autoSize="height" text="">
+      <relation target="" sidePair="left-left,top-top"/>
+    </text>
+    <text id="n20_jg3t" name="txtNO2" xy="955,220" pivot="0.5,0.5" size="299,49" visible="false" fontSize="36" align="center" vAlign="middle" autoSize="height" text="">
+      <relation target="" sidePair="right-right,top-top"/>
+    </text>
   </displayList>
 </component>

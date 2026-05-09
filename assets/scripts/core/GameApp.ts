@@ -135,10 +135,10 @@ export class GameApp extends Component {
         this.spawner.start();// 开始生成客人
     }
 
-    showDayEnd(): void {
-        this.spawner.stop();
-        this.dayEndPopup.show();
-    }
+    // showDayEnd(): void {
+    //     this.spawner.stop();
+    //     this.dayEndPopup.show();
+    // }
 
     showTransition(): void {
         this.transition.show();

@@ -101,7 +101,7 @@ export class OrderSystem {
                 order.status = OrderStatus.Accepted;
                 coinDelta = Math.floor(order.reward * 0.3); // 只给少部分钱
                 repDelta = REP_REWARDS.acceptWrongInfo;
-                message = `❌ 伪装者骗过了你！收入减少！+${coinDelta}金币 ${repDelta}声誉`;
+                message = `❌ 伪装者！收入减少！+${coinDelta}金币 ${repDelta}声誉`;
                 break;
 
             case GuestType.Wanted:

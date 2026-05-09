@@ -82,6 +82,8 @@ const RACE_ICON_INDEX: Record<string, number> = {
 //     DescMismatch = 'desc-mismatch',   // 描述错误（名字+种族标签正确，描述来自另一个种族）
 // }
 
+const gm = GameManager.instance!;
+
 export class GuestSystem {
 
     static instance: GuestSystem | null = null;
@@ -99,10 +101,10 @@ export class GuestSystem {
     private patienceTimer: number | null = null;
 
     /** 耐心递减间隔（秒） */
-    static readonly PATIENCE_TICK = 1.0;
+    static readonly PATIENCE_TICK = 0.1;
 
     /** 每次递减的耐心值 */
-    static readonly PATIENCE_DECAY = 5;
+    static readonly PATIENCE_DECAY = 1;
 
     // --------------------------------------------------------
     // 生命周期
@@ -123,6 +125,7 @@ export class GuestSystem {
     /** 生成今日通缉名单（开店时预生成并直接加入客人队列） */
     generateWantedList(): Guest[] {
         this.todayWantedList = [];
+        this.tempWantedList = [];
         const wantedCount = 1 + Math.floor(Math.random() * 3); // 0~2 个通缉犯
 
         // 打乱 MONSTER_DB，确保通缉犯之间信息不重复
@@ -130,7 +133,7 @@ export class GuestSystem {
         const selected = shuffled.slice(0, Math.min(wantedCount, MONSTER_DB.length));
 
         for (const tmpl of selected) {
-            const bounty = 200 + Math.floor(Math.random() * 800);
+            const bounty = 200 + Math.floor(Math.random() * 800);// 随机悬赏金额 200~1000
 
             const wanted: Guest = {
                 id: `wanted_${++this.nextId}`,
@@ -144,40 +147,36 @@ export class GuestSystem {
                 realName: tmpl.name,
                 realRace: tmpl.race,
                 isWanted: true,
-                bounty,
-                served: false,
+                bounty,// 悬赏金额
+                served: false,// 标记为未处理，等生成客人时再加入队列
             };
 
             this.todayWantedList.push(wanted);
-            // this.guests.push(wanted); // 直接加入客人队列
+            // gm._todayGuestLimit++; // 增加客人总数限制，确保通缉犯也算入当日总客人数量
         }
 
-        console.log(`[GuestSystem] 今日通缉名单 (${this.todayWantedList.length}人): ${this.todayWantedList.map(w => w.realName).join(', ')}`);
+        this.tempWantedList = [...this.todayWantedList]; // 预存一份通缉名单副本，用于生成客人时从中取出
+        // console.log(`[GuestSystem] 今日通缉名单 (${this.todayWantedList.length}人): ${this.todayWantedList.map(w => w.realName).join(', ')}`);
         return this.todayWantedList;
     }
 
-    /** 打乱客人队列（Fisher-Yates 洗牌算法） */
-    // shuffleGuests(): void {
-    //     for (let i = this.guests.length - 1; i > 0; i--) {
-    //         const j = Math.floor(Math.random() * (i + 1));
-    //         [this.guests[i], this.guests[j]] = [this.guests[j], this.guests[i]];
-    //     }
-    //     console.log('[GuestSystem] 客人队列已打乱');
-    // }
-
-    /** 获取今日通缉名单 */
+    /** 获取今日通缉名单（过滤掉已离开的） */
     getWantedList(): ReadonlyArray<Guest> {
-        return this.todayWantedList;
+        // 过滤掉已服务（接待/拒绝/超时）的通缉犯
+        return this.todayWantedList.filter(w => !w.served);
     }
 
-    /** 检查名字是否在通缉名单中 */
-    isWantedName(name: string): boolean {
-        return this.todayWantedList.some(w => w.realName === name);
-    }
+    // /** 检查名字是否在通缉名单中 */
+    // isWantedName(name: string): boolean {
+    //     return this.todayWantedList.some(w => w.realName === name);
+    // }
 
     // --------------------------------------------------------
     // 客人生成
     // --------------------------------------------------------
+
+    //临时存储通缉犯名单，在生成客人时从中取出，确保通缉犯优先生成且不重复
+    tempWantedList: Guest[] = [];
 
     /**
      * 生成一位新客人
@@ -186,54 +185,72 @@ export class GuestSystem {
     spawnGuest(): Guest | null {
         const gm = GameManager.instance;
         if (!gm || !gm.isPlaying) return null;
-        if (gm.remainingGuests <= 0) return null;
+        if (gm.remainingGuests <= 0) return null;// 没有剩余名额生成新客人了
 
         // 决定客人类型
         const guestType = this.rollGuestType();
-        let guest: Guest;
 
-        //不一定来通缉犯
-        // if (gm.remainingGuests <= 1 && this.todayWantedList.length != 0) {
-        //     // 最后一个客人，如果还有未生成的通缉犯，强制生成通缉犯
-        //     guest = this.todayWantedList[0];
-        //     this.todayWantedList.shift(); // 从通缉名单中移除（确保同一通缉犯只生成一次）
-        // } else {
-        if (guestType === GuestType.WrongInfo) {
-            guest = this.createWrongInfoGuest();
-        } else if (guestType === GuestType.Wanted) {
-            guest = this.todayWantedList[0]; // 从通缉名单中取第一个（已预生成但未加入队列的通缉犯）
-            this.todayWantedList.shift(); // 从通缉名单中移除（确保同一通缉犯只生成一次）
-        } else {
-            guest = this.createNormalGuest();
+        let guest: Guest;
+        if (gm.remainingGuests === 1 && this.tempWantedList.length !== 0) {
+            // 最后一个客人，如果还有未生成的通缉犯，强制生成通缉犯
+            guest = this.tempWantedList[0];
+            this.tempWantedList.shift();
+        } else {//正常生成
+            if (guestType === GuestType.WrongInfo) {
+                guest = this.createWrongInfoGuest();
+            } else if (guestType === GuestType.Wanted) {
+                // 通缉犯名单已用完时，降级为普通客人
+                if (this.tempWantedList.length > 0) {
+                    guest = this.tempWantedList[0];
+                    this.tempWantedList.shift();
+                } else {
+                    // console.warn('[GuestSystem] Wanted类型但tempWantedList已空，降级为Normal');
+                    guest = this.createNormalGuest();
+                }
+            } else {
+                guest = this.createNormalGuest();
+            }
         }
+
+
+        // // 检查客人是否有效
+        // if (!guest) {
+        //     console.warn('[GuestSystem] spawnGuest: guest is null/undefined, skipping');
+        //     console.log('tempWantedList:', this.tempWantedList);
+        //     console.log('_todayGuestLimit:', gm._todayGuestLimit);
+        //     console.log('todayWantedList:', this.todayWantedList);
+        //     return null;
         // }
+
+        // // 最终防线：确保 guest 有效
+        // if (!guest) {
+        //     console.warn('[GuestSystem] spawnGuest: guest 为空，降级创建普通客人');
+        //     guest = this.createNormalGuest();
+        // }
+
         this.guests.push(guest);
 
-        //不是通缉犯，才算入店
-        if (guestType !== GuestType.Wanted) gm.onGuestSpawned();
+        // console.log(`[GuestSystem] ${guest.cardName} [${guest.cardRace}] 入店 (${guest.guestType})`);
+        GameManager.instance?.events.emit(GameEvent.GuestArrived, { guest });// 通知系统有新客人入店
 
-        console.log(`[GuestSystem] ${guest.cardName} [${guest.cardRace}] 入店 (${guest.guestType})`);
-        GameManager.instance?.events.emit(GameEvent.GuestArrived, { guest });
-
-        console.log(guest)
-        console.log(this.todayWantedList)
-        console.log(gm.remainingGuests)
         // 第一个客人入店时启动耐心计时器
         if (!this.patienceTimer && this.guests.length > 0) {
             this.startPatienceTimer();
         }
+        // 通知 GameManager 有新客人生成（用于统计和结算逻辑）
+        GameManager.instance?.onGuestSpawned();
 
         return guest;
     }
 
-    /** 概率决定客人类型（生成良民和伪装者） */
+    /** 概率决定客人类型 */
     private rollGuestType(): GuestType {
         const rand = Math.random();
-        // 信息错误: 20%, 良民: 80%
-        const wantedList = GuestSystem.instance?.getWantedList() ?? [];
+        // 伪装: 20%, 良民: 80%
+        const wantedList = GuestSystem.instance?.getWantedList() ?? [];//通缉犯已生成名单
         //增加通缉犯出现概率
         if (wantedList.length != 0) {
-            const wantedChance = 0.3 * wantedList.length; // 每个通缉犯增加40%概率
+            const wantedChance = 0.3 * wantedList.length; // 每个通缉犯增加30%概率
             if (rand < wantedChance) {
                 return GuestType.Wanted;
             }
@@ -263,7 +280,7 @@ export class GuestSystem {
         };
     }
 
-    /** 创建信息错误客人 */
+    /** 创建伪装客人 */
     private createWrongInfoGuest(): Guest {
         const tmpl = this.pickTemplate();
         // 伪装者：名字和图片一致，但种族标签错误
@@ -296,7 +313,7 @@ export class GuestSystem {
     /** 设置当前选中客人 */
     selectGuest(guest: any): void {
         this.selectedGuest = guest;
-        console.log(`[GuestSystem] 选中客人: ${guest.cardName} [${guest.cardRace}]`);
+        // console.log(`[GuestSystem] 选中客人: ${guest.cardName} [${guest.cardRace}]`);
     }
 
     /** 获取当前选中客人 */
@@ -326,7 +343,8 @@ export class GuestSystem {
 
     /** 获取当前所有【未处理】的客人（供 UI 显示） */
     getGuestList(): ReadonlyArray<Guest> {
-        return this.guests.filter(g => !g.served);
+        // if(!this.guests.length) return [];
+        return this.guests.filter((g): g is Guest => !!g && !g.served);
     }
 
     /** 根据 ID 查找客人（即使已标记 served，只要还在队列中就能找到） */
@@ -378,15 +396,20 @@ export class GuestSystem {
 
     /** 每帧递减所有客人的耐心值 */
     tickPatience(): void {
-        if (this.guests.length === 0) {
+        if (this.guests.length === 0) {// 没有客人了，停掉计时器
             this.stopPatienceTimer();
             return;
+        }
+
+        // 清理队列中的 undefined 残留（防御性）
+        if (this.guests.some(g => !g)) {
+            this.guests = this.guests.filter((g): g is Guest => !!g);
         }
 
         const leftGuests: Guest[] = [];
 
         for (const guest of this.guests) {
-            if (guest.served) continue;
+            if (!guest || guest.served) continue;
 
             guest.patience -= GuestSystem.PATIENCE_DECAY;
 
@@ -397,19 +420,26 @@ export class GuestSystem {
                 leftGuests.push(guest);
                 console.log(`[GuestSystem] 😤 ${guest.cardName} 耐心耗尽，愤怒离店！`);
                 GameManager.instance?.onGuestTimeout(guest);
+                // console.warn(this.todayWantedList)
+                // console.warn(this.tempWantedList)
             }
         }
 
         // 通知 UI 刷新列表（显示最新耐心值 + 标记离店客人）
-        if (leftGuests.length > 0) {
-            GameManager.instance?.events.emit(GameEvent.PatienceChanged, { leftGuests });
-        }
+        // 每轮耐心衰减都刷新一次（让耐心条实时变化）
+        GameManager.instance?.events.emit(GameEvent.PatienceChanged, { leftGuests });
 
-        // 检查是否全部处理完
+        // 检查是否全部处理完（店内无人 且 所有预定客人都已生成）
         const remaining = this.guests.filter(g => !g.served).length;
-        if (remaining === 0) {
+        const gm = GameManager.instance;
+        const allSpawned = !gm || gm.remainingGuests <= 0;
+        if (remaining === 0 && allSpawned) {
             this.stopPatienceTimer();
-            GameManager.instance?.events.emit(GameEvent.AllGuestsDone, {});
+            gm?.events.emit(GameEvent.AllGuestsDone, {});
+            // console.warn("cccccccccc")
+        } else if (remaining === 0 && !allSpawned) {
+            // 店里暂时没人但还有客人要来，不要停计时器
+            // console.log(`[tickPatience] 店内暂无客人，等待剩余 ${gm?.remainingGuests ?? '?'} 位客人到店`);
         }
     }
 

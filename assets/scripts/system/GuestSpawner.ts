@@ -23,9 +23,9 @@ export class GuestSpawner {
 
         this.spawnOnce();
 
-        if (gm.remainingGuests > 0) {
-            const interval = this.getInterval();
-            this.spawnTimer = setInterval(() => this.spawnOnce(), interval * 1000);
+        if (gm.remainingGuests > 0) {//总计减去已生成
+            const interval = this.getInterval();// 根据声誉调整生成速度
+            this.spawnTimer = setInterval(() => this.spawnOnce(), interval * 1000);// 每隔 5秒生成一个客人
         }
     }
 
@@ -46,12 +46,12 @@ export class GuestSpawner {
     }
 
     private getInterval(): number {
-        const rep = GameManager.instance?.reputation ?? 50;
-        if (rep > 80) return 2;
-        if (rep > 60) return 3;
-        if (rep > 40) return BASE_SPAWN_INTERVAL;
-        if (rep > 20) return 7;
-        return 10;
+        // const rep = GameManager.instance?.reputation ?? 50;// 根据声誉调整生成速度（声誉越高，生成越快）初始五十
+        // if (rep > 80) return 1;
+        // if (rep > 60) return 3;
+        // if (rep > 40) return BASE_SPAWN_INTERVAL;
+        // if (rep > 20) return 7;
+        return 5;// 暂时固定生成速度
     }
 
     private bindEvents(): void {

@@ -22,6 +22,9 @@ export class OpenShopMainUI {
     private btnGroup: fgui.GGroup | null = null;
     private guestIcon: fgui.GLoader | null = null;  // 怪物形象装载器
 
+    private txtNO1: fgui.GTextField | null = null;  // 无客人提示文本
+    private txtNO2: fgui.GTextField | null = null;  // 无通缉犯提示文本
+
     show(): void {
         console.log('[OpenShopMainUI] show');
         const loader = this.getLoader();
@@ -101,6 +104,13 @@ export class OpenShopMainUI {
         let txtWantedTitle = this.panel?.getChild('txtWantedTitle') as fgui.GTextField;
         if (txtWantedTitle) txtWantedTitle.text = `通缉名单(如遇通缉客人需报警)`;
 
+        this.txtNO1 = this.panel?.getChild('txtNO1') as fgui.GTextField;
+        if (this.txtNO1) this.txtNO1.text = `暂无客人`;
+        if (this.txtNO1) this.txtNO1.visible = false;
+        this.txtNO2 = this.panel?.getChild('txtNO2') as fgui.GTextField;
+        if (this.txtNO2) this.txtNO2.text = `暂无通缉犯`;
+        if (this.txtNO2) this.txtNO2.visible = false;
+
         if (this.btnOpenShop) this.btnOpenShop.getChild("text").text = '开始营业';
 
         if (this.btnGroup) this.btnGroup.visible = false;
@@ -130,45 +140,52 @@ export class OpenShopMainUI {
         }
     }
 
+    /** 更新客人列表 */
     renderGuestList(): void {
         if (!this.guestList) return;
         const guests = GuestSystem.instance?.getGuestList() ?? [];
-
-        // 清空列表
-        this.guestList.removeChildren(0, -1, true);
-
-        for (const g of guests) {
-            // 用 addItem 创建列表项（不依赖对象池）
-            const item = this.guestList.addItem() as fgui.GComponent;
-            if (!item) continue;
-
-            const n = item.getChild('txtLeft') as fgui.GTextField;
-            if (n) n.text = `${g.cardName} [${g.cardRace}]`;
-            const p = item.getChild('txtRight') as fgui.GTextField;
-            if (p) p.text = `耐心:${g.patience}`;
+        this.guestList.numItems = guests.length;
+        if (guests.length === 0) {
+            if (this.txtNO1) this.txtNO1.visible = true;
+        } else {
+            if (this.txtNO1) this.txtNO1.visible = false;
         }
+    }
+
+    /** 单独抽取：渲染单个列表项 */
+    private renderGuestItem(index: number, item: fgui.GComponent): void {
+        const guests = GuestSystem.instance?.getGuestList() ?? [];
+        const guest = guests[index];
+        if (!guest) return;
+
+        // 直接赋值，FGUI 会自动复用组件
+        (item.getChild("txtLeft") as fgui.GTextField).text = `${guest.cardName} [${guest.cardRace}]`;
+        (item.getChild("txtRight") as fgui.GTextField).text = `耐心:${guest.patience}`;
     }
 
     // 渲染通缉犯列表（开店时预览，抓捕后刷新）
     renderWantedList(): void {
         if (!this.wantedList) return;
         const list = GuestSystem.instance?.getWantedList() ?? [];
-
-        this.wantedList.removeChildren(0, -1, true);
-
+        this.wantedList.numItems = list.length;
         if (list.length === 0) {
-            const item = this.wantedList.addItem() as fgui.GComponent;
-            const n = item?.getChild('txtLeft') as fgui.GTextField;
-            if (n) n.text = '暂无通缉犯';
+            if (this.txtNO2) this.txtNO2.visible = true;
         } else {
-            for (const w of list) {
-                const item = this.wantedList.addItem() as fgui.GComponent;
-                if (!item) continue;
-                const n = item.getChild('txtLeft') as fgui.GTextField;
-                if (n) n.text = `${w.realName}`;
-                const p = item.getChild('txtRight') as fgui.GTextField;
-                if (p) p.text = `赏金:${w.bounty}`;
-            }
+            if (this.txtNO2) this.txtNO2.visible = false;
+        }
+    }
+
+    /** itemRenderer：渲染单个通缉列表项 */
+    private renderWantedItem(index: number, item: fgui.GObject): void {
+        const list = GuestSystem.instance?.getWantedList() ?? [];
+        const w = list[index];
+        const comp = item.asCom;
+        if (!comp) return;
+        const n = comp.getChild('txtLeft') as fgui.GTextField;
+        const p = comp.getChild('txtRight') as fgui.GTextField;
+        if (w) {
+            if (n) n.text = w.realName;
+            if (p) p.text = `赏金:${w.bounty}`;
         }
     }
 
@@ -182,7 +199,11 @@ export class OpenShopMainUI {
 
     private cacheRefs(panel: fgui.GComponent): void {
         this.guestList = panel.getChild('guestList') as fgui.GList;
+        this.guestList.itemRenderer = (i, item) => this.renderGuestItem(i, item.asCom);
+
         this.wantedList = panel.getChild('wantedList') as fgui.GList;
+        this.wantedList.itemRenderer = (i, item) => this.renderWantedItem(i, item);
+
         this.btnOpenShop = panel.getChild('btnOpenShop') as fgui.GButton;
         this.btnA = panel.getChild('btnA') as fgui.GButton;
         this.btnB = panel.getChild('btnB') as fgui.GButton;
@@ -250,15 +271,20 @@ export class OpenShopMainUI {
             this.showFirstGuestIcon();
             this.renderGuestList();
         }, this);
-        // 客人超时离店时刷新图片和列表
+        /** 耐心值变化时的处理 */
         gm.events.on(GameEvent.PatienceChanged, (data: { leftGuests?: Guest[] }) => {
+            this.renderGuestList();
+        }, this);
+        /** 客人超时时的处理 */
+        gm.events.on(GameEvent.GuestTimeout, (data: { leftGuests?: Guest[] }) => {
             const leftGuests = data?.leftGuests ?? [];
             const selected = GuestSystem.instance?.getSelectedGuest();
-            // 如果离店的是当前显示的客人，清空图片
             if (selected && leftGuests.some(g => g.id === selected.id)) {
                 this.clearGuestIcon();
             }
+            this.showFirstGuestIcon();
             this.renderGuestList();
+            this.renderWantedList();
         }, this);
     }
 

@@ -5,48 +5,48 @@ import type { Guest } from '../system/GuestSystem';
 // 游戏事件 — 集中定义，避免魔法字符串
 // ============================================================
 export enum GameEvent {
-    CoinChanged     = 'game:coin-changed',
-    LevelUp         = 'game:level-up',
-    GuestArrived    = 'game:guest-arrived',
-    OrderCreated    = 'game:order-created',
+    CoinChanged = 'game:coin-changed',
+    LevelUp = 'game:level-up',
+    GuestArrived = 'game:guest-arrived',
+    OrderCreated = 'game:order-created',
     ReputationChanged = 'game:reputation-changed',
-    DayStarted      = 'game:day-started',
-    DayEnded        = 'game:day-ended',
-    GuestServed     = 'game:guest-served',
-    AllGuestsDone   = 'game:all-guests-done',
-    PatienceChanged  = 'game:patience-changed',
-    GuestTimeout     = 'game:guest-timeout',
-    SaveLoaded      = 'game:save-loaded',
-    SaveCompleted   = 'game:save-completed',
+    DayStarted = 'game:day-started',
+    DayEnded = 'game:day-ended',
+    GuestServed = 'game:guest-served',
+    AllGuestsDone = 'game:all-guests-done',
+    PatienceChanged = 'game:patience-changed',
+    GuestTimeout = 'game:guest-timeout',
+    SaveLoaded = 'game:save-loaded',
+    SaveCompleted = 'game:save-completed',
     WantedListUpdated = 'game:wanted-list-updated',
 }
 
 /** 游戏阶段 */
 export enum GamePhase {
-    MainMenu       = 'main-menu',      // 主菜单（开始/继续）
-    GameMenu       = 'game-menu',      // 游戏主菜单（开店/缉妖）
-    DayStart       = 'day-start',      // 今日通缉令展示
-    Playing        = 'playing',        // 营业中
-    DayEnd         = 'day-end',        // 今日结算
-    Transition     = 'transition',     // 过场动画
+    MainMenu = 'main-menu',      // 主菜单（开始/继续）
+    GameMenu = 'game-menu',      // 游戏主菜单（开店/缉妖）
+    DayStart = 'day-start',      // 今日通缉令展示
+    Playing = 'playing',        // 营业中
+    DayEnd = 'day-end',        // 今日结算
+    Transition = 'transition',     // 过场动画
 }
 
 /** 声誉等级 */
 export enum RepLevel {
-    Black   = 'black',    // 0-20  黑店
-    Bad     = 'bad',      // 21-40 差评店
-    Normal  = 'normal',   // 41-60 普通店
-    Good    = 'good',     // 61-80 好评店
-    Famous  = 'famous',   // 81-100 名店
+    Black = 'black',    // 0-20  黑店
+    Bad = 'bad',      // 21-40 差评店
+    Normal = 'normal',   // 41-60 普通店
+    Good = 'good',     // 61-80 好评店
+    Famous = 'famous',   // 81-100 名店
 }
 
 /** 声誉等级配置 */
 const REP_CONFIG: Record<RepLevel, { label: string; minRep: number; guestCount: [number, number]; wantedMax: number; incomeMul: number; }> = {
-    [RepLevel.Black]:  { label: '黑店',   minRep: 0,   guestCount: [2, 3],   wantedMax: 1, incomeMul: 0.5 },
-    [RepLevel.Bad]:    { label: '差评店', minRep: 21,  guestCount: [4, 5],   wantedMax: 1, incomeMul: 0.8 },
-    [RepLevel.Normal]: { label: '普通店', minRep: 41,  guestCount: [6, 7],   wantedMax: 2, incomeMul: 1.0 },
-    [RepLevel.Good]:   { label: '好评店', minRep: 61,  guestCount: [8, 10],  wantedMax: 3, incomeMul: 1.2 },
-    [RepLevel.Famous]: { label: '名店',   minRep: 81,  guestCount: [12, 15], wantedMax: 4, incomeMul: 1.5 },
+    [RepLevel.Black]: { label: '黑店', minRep: 0, guestCount: [2, 3], wantedMax: 1, incomeMul: 0.5 },
+    [RepLevel.Bad]: { label: '差评店', minRep: 21, guestCount: [4, 5], wantedMax: 1, incomeMul: 0.8 },
+    [RepLevel.Normal]: { label: '普通店', minRep: 41, guestCount: [6, 7], wantedMax: 2, incomeMul: 1.0 },
+    [RepLevel.Good]: { label: '好评店', minRep: 61, guestCount: [8, 10], wantedMax: 3, incomeMul: 1.2 },
+    [RepLevel.Famous]: { label: '名店', minRep: 81, guestCount: [12, 15], wantedMax: 4, incomeMul: 1.5 },
 };
 
 /** 存档数据结构 */
@@ -75,16 +75,19 @@ export class GameManager {
     private _phase: GamePhase = GamePhase.MainMenu;
 
     // ---- 每日数据 ----
-    private _currentDay: number = 0;
-    private _todayGuestLimit: number = 0;
+    private _currentDay: number = 0;// 当前第几天
+    /** 今日预定客人数量（根据声誉随机生成）加上通缉犯 */
+    public _todayGuestLimit: number = 0;
+    /** 今日已生成客人数量 */
     private _todayGuestSpawned: number = 0;
-    private _todayGuestServed: number = 0;
-    private _todayCoinEarned: number = 0;
-    private _todayRepDelta: number = 0;
-    private _todayWantedCaught: number = 0;
-    private _todayWantedTotal: number = 0;
-    private _todayCorrectCount: number = 0;
-    private _todayWrongCount: number = 0;
+    /** 今日已处理客人数量（包括接待和拒绝的总数） */
+    public _todayGuestServed: number = 0;
+    private _todayCoinEarned: number = 0;// 今日赚取的金币
+    private _todayRepDelta: number = 0;// 今日声誉变化
+    private _todayWantedCaught: number = 0;// 今日被缉拿的通缉犯数量
+    private _todayWantedTotal: number = 0;// 今日通缉犯总数
+    private _todayCorrectCount: number = 0;// 今日接待正确的客人数量
+    private _todayWrongCount: number = 0;// 今日接待错误的客人数量
 
     // ---- 存档状态 ----
     private _hasSaveData: boolean = false;
@@ -147,7 +150,7 @@ export class GameManager {
 
         try {
             const saveData: SaveData = JSON.parse(saveJson);
-            
+
             // 版本检查
             if (saveData.version !== SAVE_VERSION) {
                 console.warn('[GameManager] 存档版本不匹配，尝试兼容加载');
@@ -333,8 +336,10 @@ export class GameManager {
     }
 
     /** 客人处理完毕（接待/拒绝/报警任一操作），检查是否所有客人处理完 */
-    onGuestServed(correct: boolean,isWanted?: boolean): void {
-       if(!isWanted) this._todayGuestServed++;
+    onGuestServed(correct: boolean, isWanted?: boolean): void {
+        this._todayGuestServed++;
+        // console.warn("onGuestServed增加计数")
+        // console.warn()
         if (correct) {// 接待正确
             this._todayCorrectCount++;
         } else {
@@ -345,7 +350,8 @@ export class GameManager {
         // 延迟 2.5 秒发射事件，让 Toast 消失后再弹出结算界面
         if (this._todayGuestServed >= this._todayGuestLimit) {
             // setTimeout(() => {
-                this.events.emit(GameEvent.AllGuestsDone);
+            this.events.emit(GameEvent.AllGuestsDone);
+            // console.warn("aaaaaaaa")
             // }, 2500);
         }
     }
@@ -368,6 +374,8 @@ export class GameManager {
 
     /** 还有几个客人没来 */
     get remainingGuests(): number {
+        // console.warn("今日预定客人数量（根据声誉随机生成）加上通缉犯"+this._todayGuestLimit)
+        // console.warn("今日已生成客人数量"+this._todayGuestSpawned)
         return this._todayGuestLimit - this._todayGuestSpawned;
     }
 
@@ -389,6 +397,9 @@ export class GameManager {
     /** 客人耐心耗尽，愤怒离店 */
     onGuestTimeout(guest: Guest): void {
         this._todayGuestServed++;
+        // console.warn("onGuestTimeout增加计数")
+        // console.warn(this._todayGuestServed)
+        // console.warn(this._todayGuestLimit)
         this._todayWrongCount++;
         // 耐心耗尽扣声誉
         this.changeRep(-5);
@@ -398,6 +409,9 @@ export class GameManager {
         // 检查是否所有客人都处理完了（包括愤怒离店的）
         if (this._todayGuestServed >= this._todayGuestLimit) {
             this.events.emit(GameEvent.AllGuestsDone);
+            // console.warn("bbbbbbbb")
+            // console.warn(this._todayGuestServed)
+            // console.warn(this._todayGuestLimit)
         }
     }
 }

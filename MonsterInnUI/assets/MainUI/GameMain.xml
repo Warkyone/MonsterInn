@@ -10,11 +10,11 @@
     <component id="n13_k0bm" name="btnCatchDemon" src="ngfr2" fileName="Item/ButtonStart.xml" xy="855,278" pivot="0.5,0.5">
       <relation target="" sidePair="right-right,top-top"/>
     </component>
-    <text id="n14_k0bm" name="text1" xy="150,370" pivot="0.5,0" size="471,258" fontSize="20" autoSize="none" text="">
+    <text id="n14_k0bm" name="text1" xy="150,370" pivot="0.5,0" size="471,258" fontSize="24" autoSize="none" text="">
       <relation target="n5_ngfr" sidePair="top-bottom"/>
       <relation target="" sidePair="left-left"/>
     </text>
-    <text id="n15_k0bm" name="text2" xy="700,365" pivot="0.5,0" size="471,258" fontSize="20" autoSize="none" text="">
+    <text id="n15_k0bm" name="text2" xy="700,365" pivot="0.5,0" size="471,258" fontSize="24" autoSize="none" text="">
       <relation target="" sidePair="right-right"/>
       <relation target="n13_k0bm" sidePair="top-bottom"/>
     </text>
