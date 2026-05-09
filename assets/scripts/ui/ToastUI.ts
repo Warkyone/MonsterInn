@@ -14,7 +14,7 @@ export class ToastUI {
 
         this.hide();
 
-        const toast = loader.createComp<fgui.GComponent>(UI_COMPONENTS.toastPopup);
+        const toast = loader.createComp(UI_COMPONENTS.toastPopup) as fgui.GComponent;
         if (!toast) return;
 
         const txt = toast.getChild('txtMsg') as fgui.GTextField;
@@ -23,7 +23,7 @@ export class ToastUI {
         fgui.GRoot.inst.addChild(toast);
         const sw = fgui.GRoot.inst.width;
         const sh = fgui.GRoot.inst.height;
-        toast.setPosition((sw - toast.width) / 2, sh - 150);
+        toast.setPosition((sw - toast.width) / 2,  200);
 
         this.currentToast = toast;
         toast.alpha = 0;

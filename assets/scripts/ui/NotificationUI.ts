@@ -3,6 +3,11 @@ import * as fgui from 'fairygui-cc';
 import { GTween, EaseType } from 'fairygui-cc';
 import { UI_COMPONENTS } from './UIPackageLoader';
 
+interface NotificationEntry {
+    obj: fgui.GComponent; // 新增：toast组件对象
+    baseY: number;        // 已有的：Y轴位置
+    phase: 'entering' | 'staying' | 'leaving'; // 已有的：状态
+}
 /** 进店通知动画（普通类，由 GameApp 持有） */
 export class NotificationUI {
 
@@ -13,7 +18,7 @@ export class NotificationUI {
     }[] = [];
 
     private readonly BASE_X  = 20;
-    private readonly START_Y = fgui.GRoot.inst.height * 0.45;   // 垂直居中偏上一点
+    private readonly START_Y = fgui.GRoot.inst.height * 0.65;
     private readonly GAP     = 10;
     private readonly ENTER_S = 0.35;
     private readonly STAY_MS = 3500;
@@ -23,14 +28,14 @@ export class NotificationUI {
         const loader = this.getLoader();
         if (!loader?.pkg || !fgui.GRoot.inst) return;
 
-        const notif = loader.createComp<fgui.GComponent>(UI_COMPONENTS.toastPopup);
+        const notif = loader.createComp(UI_COMPONENTS.toastPopup) as fgui.GComponent;
         if (!notif) return;
 
         fgui.GRoot.inst.addChild(notif);
         const txt = notif.getChild('txtMsg') as fgui.GTextField;
         if (txt) txt.text = `${name} [${race}] 进店了`;
 
-        const entry = { obj: notif, baseY: fgui.GRoot.inst.height * 0.45, phase: 'entering' as const };
+        const entry:NotificationEntry = { obj: notif, baseY: fgui.GRoot.inst.height * 0.45, phase: 'entering' as const };
         this.notifications.push(entry);
         this.rearrange();
 
