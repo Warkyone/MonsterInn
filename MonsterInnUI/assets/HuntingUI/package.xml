@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<packageDescription id="uv9a6vr6">
+  <resources>
+    <component id="jg3tv" name="HuntingDemons.xml" path="/" exported="true"/>
+    <component id="jg3tw" name="diceItem.xml" path="/Item/"/>
+    <component id="jg3t0" name="HuntingDemonsMap.xml" path="/"/>
+    <component id="jg3t7" name="mapItem.xml" path="/Item/"/>
+    <image id="jg3t8" name="map.png" path="/img/"/>
+  </resources>
+  <publish name="HuntingUI" path="C:\Users\warkyone\Desktop\MonsterInn\assets\resources" packageCount="2"/>
+</packageDescription>

@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<component size="2560,1440">
+  <displayList>
+    <component id="n0_jg3t" name="mapItem" src="jg3t7" fileName="Item/mapItem.xml" xy="-433,-3"/>
+  </displayList>
+</component>
