@@ -20,24 +20,20 @@
 // }
 // @ts-ignore
 import { _decorator, Component, view, ResolutionPolicy } from 'cc';
-import * as fgui from 'fairygui-cc';
+import * as fgui from 'fairygui-cc'; // 修复fgui导入
 const { ccclass, property } = _decorator;
 
-@ccclass('GameApp')
-export class GameApp extends Component {
+@ccclass('CanvasFitSetup') 
+export class CanvasFitSetup extends Component {
+
     onLoad() {
-        // 1. 设置适配策略：固定高度，宽度自适应（16:9横屏不变形）
-        view.setDesignResolutionSize(1280, 720, ResolutionPolicy.FIXED_HEIGHT);
+        // 标准横屏适配
+        view.setDesignResolutionSize(1280, 720, ResolutionPolicy.SHOW_ALL);
+        window.addEventListener('resize', () => {
+            view.resizeWithBrowserSize(true);
+            fgui.GRoot.inst.makeFullScreen();
+        });
 
-        // 2. 监听窗口变化，自动重新适配
-        window.addEventListener('resize', this.onWindowResize.bind(this));
-    }
-
-    onWindowResize() {
-        // 1. 让Cocos引擎重新适配窗口大小
-        view.resizeWithBrowserSize(true);
-
-        // 2. 关键：让FairGUI根节点重新铺满屏幕，适配新窗口大小
         fgui.GRoot.inst.makeFullScreen();
     }
 }
